@@ -53,7 +53,7 @@ public class Data {
     }
 
     public static Servo getServoById(int id) {
-        // search through motor list until motor with matching id is found
+        // search through servo list until servo with matching id is found
         for (Servo servo : servos) {
             if (servo.id != id)
                 continue;

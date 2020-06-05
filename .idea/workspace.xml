@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VulcanDashFX/img/board.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VulcanDashFX/img/dashboardBot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VulcanDashFX/img/vulcanPNG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VulcanDashFX/main/Data.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VulcanDashFX/main/Data.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VulcanDashFX/main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VulcanDashFX/main/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VulcanDashFX/main/MessageHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VulcanDashFX/main/MessageHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VulcanDashFX/main/hardware/Sensor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VulcanDashFX/main/hardware/Sensor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VulcanDashFX/main/hardware/Servo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VulcanDashFX/main/hardware/Servo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/img/batteryIndicator.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/img/batteryIndicator.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/img/board.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/img/board.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/img/dashboardBot.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/img/dashboardBot.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/img/vulcanPNG.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/img/vulcanPNG.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Data.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Data.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/MessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/MessageHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/hardware/DcMotor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/hardware/DcMotor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/hardware/Sensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/hardware/Sensor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/hardware/Servo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/hardware/Servo.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,7 +85,7 @@
     </FindUsagesManager>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/VulcanDash" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectId" id="1cm6q4bInLKMDMUTw07gxXLmiTw" />
@@ -91,10 +112,11 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="recentsLimit" value="5" />
-    <property name="settings.editor.selected.configurable" value="preferences.JavaFX" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/res" />
       <recent name="$PROJECT_DIR$/src/main/fxml" />
     </key>
   </component>
@@ -198,36 +220,47 @@
   <component name="VcsManagerConfiguration">
     <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/VulcanDash" />
+    </ignored-roots>
   </component>
   <component name="WindowStateProjectService">
     <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1591141327723">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1591141327723" />
+    <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser" timestamp="1591316512855">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1591316512855" />
     <state x="482" y="172" key="DetectedRootsChooserDialog" timestamp="1591121675874">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="482" y="172" key="DetectedRootsChooserDialog/0.0.1440.900@0.0.1440.900" timestamp="1591121675874" />
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1591261535222">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1591332567485">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1591261535222" />
-    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1591261535221">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1591332567485" />
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.23.1440.828@0.23.1440.828" timestamp="1591332136520" />
+    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1591332567484">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1591261535221" />
-    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1591261535219">
+    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1591332567484" />
+    <state width="1398" height="245" key="GridCell.Tab.0.center/0.23.1440.828@0.23.1440.828" timestamp="1591332136518" />
+    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1591332567483">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1591261535219" />
-    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1591261535221">
+    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1591332567483" />
+    <state width="1398" height="245" key="GridCell.Tab.0.left/0.23.1440.828@0.23.1440.828" timestamp="1591332136517" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1591332567485">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1591261535221" />
-    <state x="208" y="31" key="SettingsEditor" timestamp="1591124941390">
+    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1591332567485" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right/0.23.1440.828@0.23.1440.828" timestamp="1591332136519" />
+    <state x="208" y="31" key="SettingsEditor" timestamp="1591262561334">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="208" y="31" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1591124941390" />
+    <state x="208" y="31" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1591262561334" />
     <state x="413" y="282" key="com.intellij.ide.util.TipDialog" timestamp="1591135434141">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

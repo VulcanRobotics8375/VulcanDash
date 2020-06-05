@@ -3,7 +3,7 @@ package main.hardware;
 public class Servo {
 
     public int id;
-    public double pos;
+    private double pos;
 
     public Servo() {}
 
@@ -13,6 +13,14 @@ public class Servo {
 
     public Servo(int id, double pos) {
         this.id = id;
+        this.pos = pos;
+    }
+
+    public double getPos() {
+        return pos;
+    }
+
+    public void setPos(double pos) {
         this.pos = pos;
     }
 

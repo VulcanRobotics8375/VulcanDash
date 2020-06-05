@@ -5,7 +5,6 @@ public class DcMotor {
     public int limHigh;
     public int encoderPos;
     public float power;
-
     public int id;
 
     public DcMotor() {}
@@ -15,7 +14,6 @@ public class DcMotor {
     }
 
     public DcMotor(int limLow, int limHigh, int encoderPos, int id) {
-
         this.limLow = limLow;
         this.limHigh = limHigh;
         this.encoderPos = encoderPos;

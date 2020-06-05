@@ -67,7 +67,7 @@ public class MessageHandler {
                             Objects.requireNonNull(Data.getMotorById(Integer.parseInt(id))).power = Float.parseFloat(placeholder[4]);
                             break;
                         case "Servo":
-                            Objects.requireNonNull(Data.getServoById(Integer.parseInt(id))).pos = Float.parseFloat(placeholder[3]);
+                            Objects.requireNonNull(Data.getServoById(Integer.parseInt(id))).setPos(Float.parseFloat(placeholder[3]));
                             break;
                     }
 

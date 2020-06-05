@@ -12,10 +12,14 @@ import javafx.stage.Stage;
 import main.hardware.DcMotor;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Main extends Application {
     double offset = 5;
@@ -24,6 +28,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws FileNotFoundException {
 //        Server server = new Server(8375);
 //        server.start();
+//        waitForStart();
         primaryStage.setTitle("Vulcan Dashboard");
 
         //main Pane for the whole window. Holds 3 columns split at default 20% width and 80% width. The columns are resizable
@@ -44,8 +49,11 @@ public class Main extends Application {
         setGridTabOptions(motorGrid);
 
         //TODO remove debug code
-        Data.motors.add(new DcMotor(0));
-        Data.motors.add(new DcMotor(1));
+//        Data.motors.add(new DcMotor(0));
+//        Data.motors.add(new DcMotor(1));
+
+        HashMap<Integer, TextField> limHighs = new HashMap<>();
+        HashMap<Integer, TextField> limLows = new HashMap<>();
 
         //iterate through all of the motors and add text boxes and labels for each motor constant.
         int row = 1;
@@ -53,6 +61,7 @@ public class Main extends Application {
 
             Label label = new Label("DcMotor " + Data.motors.get(i).id + ": Upper Limit");
             TextField field = new TextField();
+            limHighs.put(Data.motors.get(i).id, field);
             motorGrid.add(label, 1, row);
             row++;
             motorGrid.add(field, 1, row);
@@ -60,7 +69,10 @@ public class Main extends Application {
         }
         Button updateMotors = new Button("Update Motor Constants");
         updateMotors.setOnAction(e -> {
-            //button action
+            for (DcMotor motor : Data.motors) {
+                String val = limHighs.get(motor.id).getText();
+//                server.sendToRobot("/set DcMotor " + motor.id + " limHigh " + val);
+            }
         });
 
         motorGrid.add(updateMotors, 1, row);
@@ -106,8 +118,8 @@ public class Main extends Application {
         constantGrid.add(updateConstants, 1, row);
         miscTab.setContent(constantGrid);
 
-        Image board = new Image(new FileInputStream("/Users/williampaoli/IdeaProjects/VulcanDashFX/src/img/board.png"));
-        Image robot = new Image(new FileInputStream("/Users/williampaoli/IdeaProjects/VulcanDashFX/src/img/dashboardBot.png"));
+        Image board = new Image(new FileInputStream("/Users/williampaoli/IdeaProjects/VulcanDashFX/res/img/board.png"));
+        Image robot = new Image(new FileInputStream("/Users/williampaoli/IdeaProjects/VulcanDashFX/res/img/dashboardBot.png"));
         ImageView boardView = new ImageView(board);
         ImageView robotView = new ImageView(robot);
 
@@ -135,10 +147,8 @@ public class Main extends Application {
 
         //finally, put the main components in a VBox, in case we need to add anymore elements outside of the SplitPane.
         VBox container = new VBox();
-
         container.getChildren().add(splitter);
-
-        Image appIcon = new Image(new FileInputStream("/Users/williampaoli/IdeaProjects/VulcanDashFX/src/img/vulcanPNG.png"));
+        Image appIcon = new Image(new FileInputStream("/Users/williampaoli/IdeaProjects/VulcanDashFX/res/img/vulcanPNG.png"));
         primaryStage.getIcons().add(appIcon);
         primaryStage.setScene(new Scene(container, 1280, 700));
         primaryStage.show();
@@ -156,5 +166,13 @@ public class Main extends Application {
         pane.setHgap(5);
         pane.setVgap(5);
         pane.setPadding(new Insets(10, 10, 10, 10));
+    }
+
+    public void waitForStart() {
+        System.out.println("waiting for start command from client...");
+        while(!Data.getStart()) {
+
+        }
+        System.out.println("Start command received, Starting Dashboard");
     }
 }
