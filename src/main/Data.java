@@ -4,21 +4,23 @@ import main.hardware.DcMotor;
 import main.hardware.Servo;
 import main.misc.Constant;
 import main.misc.Point;
+import main.misc.TelemetryMsg;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Data {
 
-    public static  List<DcMotor> motors = new ArrayList<>();
-    public static  List<Servo> servos = new ArrayList<>();
-    public static ArrayList<Constant> constants = new ArrayList<>();
+    public static List<DcMotor> motors = new ArrayList<>();
+    public static List<Servo> servos = new ArrayList<>();
+    public static List<Constant> constants = new ArrayList<>();
+    public static List<TelemetryMsg> telemetryList = new ArrayList<>();
     public static Point startPos = new Point();
     public static Point robotPos = new Point();
-    public static boolean running;
+    public static double robotAngle = 0;
+    public static volatile boolean running;
     public static double batteryLvl;
-
-    private static boolean started;
+    private static volatile boolean started;
 
     public static void setStart(boolean started) {
         Data.started = started;
@@ -61,6 +63,25 @@ public class Data {
         }
 
         //if there is no match, return null
+        return null;
+    }
+
+    public static TelemetryMsg getTelemetryById(int id) {
+        for (TelemetryMsg msg : telemetryList) {
+            if(msg.id == id)
+                continue;
+            return msg;
+        }
+        return null;
+    }
+
+    public static Constant getConstantById(String key) {
+        for (Constant constant : constants) {
+            if(!(constant.key.equals(key)))
+                continue;
+            return constant;
+        }
+
         return null;
     }
 

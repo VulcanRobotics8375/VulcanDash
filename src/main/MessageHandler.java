@@ -3,8 +3,10 @@ package main;
 import main.hardware.DcMotor;
 import main.hardware.Servo;
 import main.misc.Constant;
+import main.misc.TelemetryMsg;
 
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class MessageHandler {
@@ -13,7 +15,7 @@ public class MessageHandler {
 
         if(msg.startsWith("/")) {
             String[] placeholder = msg.split(" ");
-
+//            System.out.println(Arrays.toString(placeholder));
             String key = placeholder[0];
 
             switch (key) {
@@ -69,8 +71,35 @@ public class MessageHandler {
                         case "Servo":
                             Objects.requireNonNull(Data.getServoById(Integer.parseInt(id))).setPos(Float.parseFloat(placeholder[3]));
                             break;
+                        case "Robot":
+                            Data.robotPos.x = Double.parseDouble(placeholder[2]);
+                            Data.robotPos.y = Double.parseDouble(placeholder[3]);
+                            Data.robotAngle = Double.parseDouble(placeholder[4]);
                     }
+                    break;
 
+                case "/telemetry":
+                    TelemetryMsg telemetry = new TelemetryMsg();
+                    boolean telemetrySet = false;
+                    int telemetryId = 0;
+                    for (TelemetryMsg telemetryMsg : Data.telemetryList) {
+                        if(telemetryMsg.id != Integer.parseInt(placeholder[1])) {
+                            telemetryId++;
+                            continue;
+                        }
+                        telemetry.setTelemetry(telemetryMsg);
+                        telemetrySet = true;
+                    }
+                    StringBuilder message = new StringBuilder();
+                    for (int i = 2; i < placeholder.length; i++) {
+                        message.append(placeholder[i]).append(" ");
+                    }
+                    if(!telemetrySet) {
+                        telemetry.setTelemetry(new TelemetryMsg(message.toString(), telemetryId));
+                        Data.telemetryList.add(telemetry);
+                    } else {
+                        telemetry.setMessage(message.toString());
+                    }
             }
         }
 

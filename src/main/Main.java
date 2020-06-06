@@ -3,13 +3,17 @@ package main;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import main.hardware.DcMotor;
+import main.misc.Point;
 
 import javax.swing.*;
 import java.io.File;
@@ -22,13 +26,15 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Main extends Application {
-    double offset = 5;
+    double offset = 7;
 
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
-//        Server server = new Server(8375);
-//        server.start();
-//        waitForStart();
+        Server server = new Server(8375);
+        Data.running = true;
+        server.sendToRobot("/start");
+        server.start();
+        waitForStart();
         primaryStage.setTitle("Vulcan Dashboard");
 
         //main Pane for the whole window. Holds 3 columns split at default 20% width and 80% width. The columns are resizable
@@ -49,8 +55,8 @@ public class Main extends Application {
         setGridTabOptions(motorGrid);
 
         //TODO remove debug code
-//        Data.motors.add(new DcMotor(0));
 //        Data.motors.add(new DcMotor(1));
+//        Data.motors.add(new DcMotor(0));
 
         HashMap<Integer, TextField> limHighs = new HashMap<>();
         HashMap<Integer, TextField> limLows = new HashMap<>();
@@ -60,7 +66,7 @@ public class Main extends Application {
         for (int i = 0; i < Data.motors.size(); i++) {
 
             Label label = new Label("DcMotor " + Data.motors.get(i).id + ": Upper Limit");
-            TextField field = new TextField();
+            TextField field = new TextField(Integer.toString(Data.motors.get(i).limHigh));
             limHighs.put(Data.motors.get(i).id, field);
             motorGrid.add(label, 1, row);
             row++;
@@ -86,7 +92,7 @@ public class Main extends Application {
         row = 1;
         for (int i = 0; i < Data.servos.size(); i++) {
             Label label = new Label("Servo " + Data.servos.get(i).id + ": Start Position");
-            TextField field = new TextField();
+            TextField field = new TextField(Double.toString(Data.servos.get(i).getPos()));
             servoGrid.add(label, 1, row);
             row++;
             servoGrid.add(field, 1, row);
@@ -130,9 +136,10 @@ public class Main extends Application {
         robotView.setX(Data.getStartPos().x + offset);
         new Thread(() -> {
             System.out.println("robot position updater started");
-            while(Data.isRunning()) {
+            while(Data.running) {
                 robotView.setX(Data.getRobotPos().x);
                 robotView.setY(Data.getRobotPos().y);
+                robotView.setRotate(Data.robotAngle);
             }
         }).start();
 
@@ -141,9 +148,36 @@ public class Main extends Application {
         Pane boardPane = new Pane();
         boardPane.getChildren().add(boardView);
         boardPane.getChildren().add(robotView);
+        boardPane.setOnMouseClicked(e -> {
+//            System.out.println(e.getX());
+//            System.out.println(e.getY());
+//            TODO Auton create rectangle stuff
+            Point rectCenter = new Point(e.getX(), e.getY());
+            Rectangle pathPoint = new Rectangle(e.getX() - 25, e.getY() - 12.5, 50, 25);
+            pathPoint.setCursor(Cursor.OPEN_HAND);
+            pathPoint.setStroke(Color.BLACK);
+            pathPoint.setStrokeWidth(2);
+            pathPoint.setOpacity(0.5);
+            pathPoint.setFill(Color.LIGHTGRAY);
+            boardPane.getChildren().add(pathPoint);
+        });
+
+        TabPane monitorTabs = new TabPane();
+        Tab sensorInfo = new Tab("Sensors/Encoders");
+        Tab autoTab = new Tab("Auto");
+
+        monitorTabs.getTabs().addAll(sensorInfo, autoTab);
+        monitorTabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
+        GridPane motorInfoGrid = new GridPane();
+        setGridTabOptions(motorInfoGrid);
+
+        for (int i = 0; i < Data.motors.size(); i++) {
+            Label label = new Label("");
+        }
 
         //add the 3 columns of the splitter, put the robot map in a scrollPane to account for different sized windows
-        splitter.getItems().addAll(constantTabs, new ScrollPane(boardPane), new ScrollPane(new Label("col 3")));
+        splitter.getItems().addAll(constantTabs, new ScrollPane(boardPane), monitorTabs);
 
         //finally, put the main components in a VBox, in case we need to add anymore elements outside of the SplitPane.
         VBox container = new VBox();

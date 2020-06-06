@@ -38,10 +38,13 @@ public class Server extends Thread {
 
     public void run() {
         try {
-
-            while(true) {
-                MessageHandler.parseMessage(inputStream.readUTF());
+//            System.out.println("test");
+            while(Data.running) {
+                String s = inputStream.readUTF();
+//                System.out.println(s);
+                MessageHandler.parseMessage(s);
             }
+//            System.out.println("testing");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,6 +53,7 @@ public class Server extends Thread {
     public void sendToRobot(String msg) {
         try {
             outputStream.writeUTF(msg);
+//            System.out.println("message sent");
         } catch (IOException e) {
             e.printStackTrace();
         }
