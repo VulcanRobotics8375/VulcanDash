@@ -1,8 +1,12 @@
 package main;
 
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Line;
 import main.hardware.DcMotor;
 import main.hardware.Servo;
 import main.misc.Constant;
+import main.misc.PathPoint;
 import main.misc.Point;
 import main.misc.TelemetryMsg;
 
@@ -15,6 +19,8 @@ public class Data {
     public static List<Servo> servos = new ArrayList<>();
     public static List<Constant> constants = new ArrayList<>();
     public static List<TelemetryMsg> telemetryList = new ArrayList<>();
+    public static List<PathPoint> pathPoints = new ArrayList<>();
+    public static Pane pathLines = new Pane();
     public static Point startPos = new Point();
     public static Point robotPos = new Point();
     public static double robotAngle = 0;

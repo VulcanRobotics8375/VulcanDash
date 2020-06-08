@@ -10,31 +10,32 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import main.hardware.DcMotor;
+import main.misc.PathPoint;
 import main.misc.Point;
 
-import javax.swing.*;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class Main extends Application {
     double offset = 7;
+    boolean pointDragged = false;
 
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
-        Server server = new Server(8375);
-        Data.running = true;
-        server.sendToRobot("/start");
-        server.start();
-        waitForStart();
+//        Server server = new Server(8375);
+//        Data.running = true;
+//        server.sendToRobot("/start");
+//        server.start();
+//        waitForStart();
         primaryStage.setTitle("Vulcan Dashboard");
 
         //main Pane for the whole window. Holds 3 columns split at default 20% width and 80% width. The columns are resizable
@@ -145,23 +146,6 @@ public class Main extends Application {
 
         robotView.setPreserveRatio(true);
 
-        Pane boardPane = new Pane();
-        boardPane.getChildren().add(boardView);
-        boardPane.getChildren().add(robotView);
-        boardPane.setOnMouseClicked(e -> {
-//            System.out.println(e.getX());
-//            System.out.println(e.getY());
-//            TODO Auton create rectangle stuff
-            Point rectCenter = new Point(e.getX(), e.getY());
-            Rectangle pathPoint = new Rectangle(e.getX() - 25, e.getY() - 12.5, 50, 25);
-            pathPoint.setCursor(Cursor.OPEN_HAND);
-            pathPoint.setStroke(Color.BLACK);
-            pathPoint.setStrokeWidth(2);
-            pathPoint.setOpacity(0.5);
-            pathPoint.setFill(Color.LIGHTGRAY);
-            boardPane.getChildren().add(pathPoint);
-        });
-
         TabPane monitorTabs = new TabPane();
         Tab sensorInfo = new Tab("Sensors/Encoders");
         Tab autoTab = new Tab("Auto");
@@ -172,9 +156,113 @@ public class Main extends Application {
         GridPane motorInfoGrid = new GridPane();
         setGridTabOptions(motorInfoGrid);
 
+        row = 0;
         for (int i = 0; i < Data.motors.size(); i++) {
-            Label label = new Label("");
+            Label label = new Label("Motor " + Data.motors.get(i).id + " encoder: " + Data.motors.get(i).encoderPos);
+
         }
+
+        GridPane autoGrid = new GridPane();
+        setGridTabOptions(autoGrid);
+        ScrollPane autoScroll = new ScrollPane(autoGrid);
+        autoTab.setContent(autoScroll);
+
+        Pane boardPane = new Pane();
+        boardPane.getChildren().add(boardView);
+        boardPane.getChildren().add(robotView);
+        boardPane.getChildren().add(Data.pathLines);
+        AtomicInteger pointRow = new AtomicInteger(1);
+        AtomicInteger pointId = new AtomicInteger(0);
+        Button clear = new Button("Clear Path");
+        clear.setOnAction(ae -> {
+            for (PathPoint p : Data.pathPoints) {
+                boardPane.getChildren().remove(p.rect);
+            }
+            Data.pathPoints.clear();
+            Data.pathLines.getChildren().clear();
+            autoGrid.getChildren().clear();
+            autoGrid.add(clear, 1, 0);
+            pointId.set(0);
+            pointRow.set(1);
+        });
+        Button start = new Button("Start");
+        start.setOnAction(ae -> {
+//            server.sendToRobot("/auto start");
+        });
+        autoGrid.add(clear, 1, 0);
+
+        boardPane.setOnMouseClicked(e -> {
+            if(!pointDragged) {
+                Point rectCenter = new Point(e.getX(), e.getY());
+                Rectangle pathPoint = new Rectangle(e.getX() - 25, e.getY() - 12.5, 50, 25);
+                PathPoint p = new PathPoint(pointId.getAndIncrement(), rectCenter, pathPoint);
+                Data.pathPoints.add(p);
+                pathPoint.setCursor(Cursor.OPEN_HAND);
+                pathPoint.setStroke(Color.BLACK);
+                pathPoint.setStrokeWidth(2);
+                pathPoint.setOpacity(0.5);
+                //update fill colors for start and end points, have to iterate through all points to update old ones
+                for (PathPoint path : Data.pathPoints) {
+                    if(Data.pathPoints.indexOf(path) == 0) {
+                        path.rect.setFill(Color.BLUE);
+                    } else if(Data.pathPoints.indexOf(path) == Data.pathPoints.size() - 1) {
+                        path.rect.setFill(Color.RED);
+                    } else {
+                        path.rect.setFill(Color.LIGHTGRAY);
+                    }
+                }
+                pathPoint.setOnMouseDragged(me -> {
+                    pathPoint.setCursor(Cursor.CLOSED_HAND);
+                    pointDragged = true;
+                    pathPoint.setX(me.getX() - 25);
+                    pathPoint.setY(me.getY() - 12.5);
+                    p.point.setPoint(new Point(me.getX(), me.getY()));
+                    p.rect = pathPoint;
+                    drawLines();
+                    p.xField.setText(Double.toString(p.point.x));
+                    p.yField.setText(Double.toString(p.point.y));
+                });
+                drawLines();
+                boardPane.getChildren().add(pathPoint);
+//                server.sendToRobot("/auto add " + p.id + " " + p.point.x + " " + p.point.y);
+                Label header = new Label("Pathpoint " + p.id);
+                Label xLabel = new Label("x");
+                Label yLabel = new Label("y");
+                TextField xField = new TextField(Double.toString(rectCenter.x));
+                TextField yField = new TextField(Double.toString(rectCenter.y));
+                p.xField = xField;
+                p.yField = yField;
+                Button update = new Button("update");
+                Button close = new Button("X");
+                update.setOnAction(aev -> {
+                    p.point = new Point(Double.parseDouble(xField.getText()), Double.parseDouble(yField.getText()));
+                    pathPoint.setX(p.point.x - 25);
+                    pathPoint.setY(p.point.y - 12.5);
+                    p.rect = pathPoint;
+                    drawLines();
+//                    server.sendToRobot("/auto update " + p.id + " " + p.point.x + " " + p.point.y);
+                });
+                close.setOnAction(ae -> {
+                    Data.pathPoints.remove(p);
+                    boardPane.getChildren().remove(pathPoint);
+                    drawLines();
+                    autoGrid.getChildren().removeAll(header, xLabel, yLabel, xField, yField, update, close);
+//                    server.sendToRobot("/auto remove " + p.id);
+                });
+                autoGrid.add(header, 1, pointRow.get());
+                pointRow.getAndIncrement();
+                autoGrid.add(xLabel, 0, pointRow.get());
+                autoGrid.add(xField, 1, pointRow.get());
+                autoGrid.add(yLabel, 2, pointRow.get());
+                autoGrid.add(yField, 3, pointRow.get());
+                pointRow.getAndIncrement();
+                autoGrid.add(update, 1, pointRow.get());
+                autoGrid.add(close, 0, pointRow.get());
+                pointRow.getAndIncrement();
+            }
+            pointDragged = false;
+        });
+
 
         //add the 3 columns of the splitter, put the robot map in a scrollPane to account for different sized windows
         splitter.getItems().addAll(constantTabs, new ScrollPane(boardPane), monitorTabs);
@@ -209,4 +297,17 @@ public class Main extends Application {
         }
         System.out.println("Start command received, Starting Dashboard");
     }
+
+    public void drawLines() {
+        Data.pathLines.getChildren().clear();
+        for (PathPoint p : Data.pathPoints) {
+            if (Data.pathPoints.indexOf(p) != 0) {
+                Point startPoint = Data.pathPoints.get(Data.pathPoints.indexOf(p) - 1).point;
+                Point endPoint = p.point;
+                Data.pathLines.getChildren().add(new Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+
+            }
+        }
+    }
+
 }
