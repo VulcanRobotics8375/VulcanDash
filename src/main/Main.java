@@ -31,11 +31,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
-//        Server server = new Server(8375);
-//        Data.running = true;
-//        server.sendToRobot("/start");
-//        server.start();
-//        waitForStart();
+        Server server = new Server(8375);
+        Data.running = true;
+        server.sendToRobot("/start");
+        server.start();
+        waitForStart();
         primaryStage.setTitle("Vulcan Dashboard");
 
         //main Pane for the whole window. Holds 3 columns split at default 20% width and 80% width. The columns are resizable
@@ -78,7 +78,7 @@ public class Main extends Application {
         updateMotors.setOnAction(e -> {
             for (DcMotor motor : Data.motors) {
                 String val = limHighs.get(motor.id).getText();
-//                server.sendToRobot("/set DcMotor " + motor.id + " limHigh " + val);
+                server.sendToRobot("/set DcMotor " + motor.id + " limHigh " + val);
             }
         });
 
@@ -187,7 +187,7 @@ public class Main extends Application {
         });
         Button start = new Button("Start");
         start.setOnAction(ae -> {
-//            server.sendToRobot("/auto start");
+            server.sendToRobot("/auto start");
         });
         autoGrid.add(clear, 1, 0);
 
@@ -240,14 +240,14 @@ public class Main extends Application {
                     pathPoint.setY(p.point.y - 12.5);
                     p.rect = pathPoint;
                     drawLines();
-//                    server.sendToRobot("/auto update " + p.id + " " + p.point.x + " " + p.point.y);
+                    server.sendToRobot("/auto update " + p.id + " " + p.point.x + " " + p.point.y);
                 });
                 close.setOnAction(ae -> {
                     Data.pathPoints.remove(p);
                     boardPane.getChildren().remove(pathPoint);
                     drawLines();
                     autoGrid.getChildren().removeAll(header, xLabel, yLabel, xField, yField, update, close);
-//                    server.sendToRobot("/auto remove " + p.id);
+                    server.sendToRobot("/auto remove " + p.id);
                 });
                 autoGrid.add(header, 1, pointRow.get());
                 pointRow.getAndIncrement();
