@@ -12,18 +12,32 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.hardware.DcMotor;
 import main.misc.PathPoint;
 import main.misc.Point;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class Main extends Application {
     double offset = 7;
@@ -31,11 +45,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
-        Server server = new Server(8375);
-        Data.running = true;
-        server.sendToRobot("/start");
-        server.start();
-        waitForStart();
+//        Server server = new Server(8375);
+//        Data.running = true;
+//        server.sendToRobot("/start");
+//        server.start();
+//        waitForStart();
         primaryStage.setTitle("Vulcan Dashboard");
 
         //main Pane for the whole window. Holds 3 columns split at default 20% width and 80% width. The columns are resizable
@@ -78,7 +92,7 @@ public class Main extends Application {
         updateMotors.setOnAction(e -> {
             for (DcMotor motor : Data.motors) {
                 String val = limHighs.get(motor.id).getText();
-                server.sendToRobot("/set DcMotor " + motor.id + " limHigh " + val);
+//                server.sendToRobot("/set DcMotor " + motor.id + " limHigh " + val);
             }
         });
 
@@ -165,6 +179,7 @@ public class Main extends Application {
         GridPane autoGrid = new GridPane();
         setGridTabOptions(autoGrid);
         ScrollPane autoScroll = new ScrollPane(autoGrid);
+        autoScroll.setFitToWidth(true);
         autoTab.setContent(autoScroll);
 
         Pane boardPane = new Pane();
@@ -187,7 +202,7 @@ public class Main extends Application {
         });
         Button start = new Button("Start");
         start.setOnAction(ae -> {
-            server.sendToRobot("/auto start");
+//            server.sendToRobot("/auto start");
         });
         autoGrid.add(clear, 1, 0);
 
@@ -222,6 +237,9 @@ public class Main extends Application {
                     p.xField.setText(Double.toString(p.point.x));
                     p.yField.setText(Double.toString(p.point.y));
                 });
+                pathPoint.setOnMouseReleased(de -> {
+                    pathPoint.setCursor(Cursor.OPEN_HAND);
+                });
                 drawLines();
                 boardPane.getChildren().add(pathPoint);
 //                server.sendToRobot("/auto add " + p.id + " " + p.point.x + " " + p.point.y);
@@ -240,14 +258,14 @@ public class Main extends Application {
                     pathPoint.setY(p.point.y - 12.5);
                     p.rect = pathPoint;
                     drawLines();
-                    server.sendToRobot("/auto update " + p.id + " " + p.point.x + " " + p.point.y);
+//                    server.sendToRobot("/auto update " + p.id + " " + p.point.x + " " + p.point.y);
                 });
                 close.setOnAction(ae -> {
                     Data.pathPoints.remove(p);
                     boardPane.getChildren().remove(pathPoint);
                     drawLines();
                     autoGrid.getChildren().removeAll(header, xLabel, yLabel, xField, yField, update, close);
-                    server.sendToRobot("/auto remove " + p.id);
+//                    server.sendToRobot("/auto remove " + p.id);
                 });
                 autoGrid.add(header, 1, pointRow.get());
                 pointRow.getAndIncrement();
@@ -263,12 +281,37 @@ public class Main extends Application {
             pointDragged = false;
         });
 
+        ScrollPane boardScroll = new ScrollPane(boardPane);
+        boardScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        boardScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        MenuBar menuBar = new MenuBar();
+        menuBar.setUseSystemMenuBar(true);
+        Menu file = new Menu("File");
+        Menu save = new Menu("Save...");
+        MenuItem autoSave = new MenuItem("Auto Path");
+        MenuItem constSave = new MenuItem("Constants");
+
+        autoSave.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Auto Path");
+            File f = fileChooser.showSaveDialog(primaryStage);
+            if(f != null) {
+                saveAutoToXML(f);
+            }
+        });
+
+        save.getItems().addAll(autoSave, constSave);
+        file.getItems().add(save);
+        menuBar.getMenus().add(file);
+
 
         //add the 3 columns of the splitter, put the robot map in a scrollPane to account for different sized windows
-        splitter.getItems().addAll(constantTabs, new ScrollPane(boardPane), monitorTabs);
+        splitter.getItems().addAll(constantTabs, boardScroll, monitorTabs);
 
         //finally, put the main components in a VBox, in case we need to add anymore elements outside of the SplitPane.
         VBox container = new VBox();
+        container.getChildren().add(menuBar);
         container.getChildren().add(splitter);
         Image appIcon = new Image(new FileInputStream("/Users/williampaoli/IdeaProjects/VulcanDashFX/res/img/vulcanPNG.png"));
         primaryStage.getIcons().add(appIcon);
@@ -279,7 +322,6 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-
         launch(args);
     }
 
@@ -308,6 +350,87 @@ public class Main extends Application {
 
             }
         }
+    }
+
+    public void saveAutoToXML(File f) {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+        try {
+            docBuilder = docFactory.newDocumentBuilder();
+            Document doc = docBuilder.newDocument();
+            Element root = doc.createElement("PathPoints");
+            root.setAttribute("size", Integer.toString(Data.pathPoints.size()));
+            doc.appendChild(root);
+            for (PathPoint p : Data.pathPoints) {
+                Element point = doc.createElement("PathPoint");
+                point.setAttribute("id", Integer.toString(p.id));
+                Element xPos = doc.createElement("x");
+                xPos.appendChild(doc.createTextNode(Double.toString(p.point.x)));
+                Element yPos = doc.createElement("y");
+                yPos.appendChild(doc.createTextNode(Double.toString(p.point.y)));
+                point.appendChild(xPos);
+                point.appendChild(yPos);
+
+                root.appendChild(point);
+
+            }
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            //for pretty print
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+
+            //write to file
+            StreamResult file = new StreamResult(f);
+
+            //write data
+            transformer.transform(source, file);
+            System.out.println("DONE");
+
+        } catch (ParserConfigurationException | TransformerException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void loadAutoFromXML(File f) {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+
+        try {
+            docBuilder = docFactory.newDocumentBuilder();
+            Document doc = docBuilder.newDocument();
+            doc.getDocumentElement().normalize();
+            NodeList pointList = doc.getElementsByTagName("PathPoint");
+
+            for (int i = 0; i < pointList.getLength(); i++) {
+
+                Node point = pointList.item(i);
+
+            }
+
+        } catch(ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveConstToXML(File f) {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+        try {
+            docBuilder = docFactory.newDocumentBuilder();
+            Document doc = docBuilder.newDocument();
+            Element root = doc.createElement("Constants");
+            root.setAttribute("size", Integer.toString((Data.motors.size()) + Data.constants.size()));
+            doc.appendChild(root);
+
+
+        } catch(ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

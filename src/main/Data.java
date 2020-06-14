@@ -27,6 +27,7 @@ public class Data {
     public static volatile boolean running;
     public static double batteryLvl;
     private static volatile boolean started;
+    public static final double unitsPerCm = 800 / 182.88;
 
     public static void setStart(boolean started) {
         Data.started = started;

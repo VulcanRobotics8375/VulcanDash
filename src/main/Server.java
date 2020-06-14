@@ -44,6 +44,7 @@ public class Server extends Thread {
 //                System.out.println(s);
                 MessageHandler.parseMessage(s);
             }
+            this.close();
 //            System.out.println("testing");
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,6 +61,12 @@ public class Server extends Thread {
     }
 
 
+    public void close() throws IOException {
+        serverSocket.close();
+        clientSocket.close();
+        outputStream.close();
+        inputStream.close();
+    }
 
     public static void main(String[] args) {
         Thread server = new Server(8375);
