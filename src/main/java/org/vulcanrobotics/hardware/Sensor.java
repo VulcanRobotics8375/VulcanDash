@@ -1,4 +1,4 @@
-package main.hardware;
+package org.vulcanrobotics.hardware;
 
 public class Sensor {
     public String name;

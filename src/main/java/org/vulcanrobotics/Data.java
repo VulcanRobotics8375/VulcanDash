@@ -1,14 +1,14 @@
-package main;
+package org.vulcanrobotics;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
-import main.hardware.DcMotor;
-import main.hardware.Servo;
-import main.misc.Constant;
-import main.misc.PathPoint;
-import main.misc.Point;
-import main.misc.TelemetryMsg;
+import org.vulcanrobotics.hardware.DcMotor;
+import org.vulcanrobotics.hardware.Servo;
+import org.vulcanrobotics.misc.Constant;
+import org.vulcanrobotics.misc.PathPoint;
+import org.vulcanrobotics.misc.Point;
+import org.vulcanrobotics.misc.TelemetryMsg;
 
 import java.util.ArrayList;
 import java.util.List;

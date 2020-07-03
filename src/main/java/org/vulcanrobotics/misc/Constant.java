@@ -1,4 +1,4 @@
-package main.misc;
+package org.vulcanrobotics.misc;
 
 public class Constant {
     public String key;

@@ -1,4 +1,4 @@
-package main.misc;
+package org.vulcanrobotics.misc;
 
 import javafx.scene.control.TextField;
 import javafx.scene.shape.Rectangle;

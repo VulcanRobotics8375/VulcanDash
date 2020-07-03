@@ -1,4 +1,4 @@
-package main;
+package org.vulcanrobotics;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -14,9 +14,9 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import main.hardware.DcMotor;
-import main.misc.PathPoint;
-import main.misc.Point;
+import org.vulcanrobotics.hardware.DcMotor;
+import org.vulcanrobotics.misc.PathPoint;
+import org.vulcanrobotics.misc.Point;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

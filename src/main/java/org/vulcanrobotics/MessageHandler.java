@@ -1,9 +1,9 @@
-package main;
+package org.vulcanrobotics;
 
-import main.hardware.DcMotor;
-import main.hardware.Servo;
-import main.misc.Constant;
-import main.misc.TelemetryMsg;
+import org.vulcanrobotics.hardware.DcMotor;
+import org.vulcanrobotics.hardware.Servo;
+import org.vulcanrobotics.misc.Constant;
+import org.vulcanrobotics.misc.TelemetryMsg;
 
 import java.nio.FloatBuffer;
 import java.util.Arrays;
