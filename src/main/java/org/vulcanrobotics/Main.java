@@ -139,8 +139,8 @@ public class Main extends Application {
         constantGrid.add(updateConstants, 1, row);
         miscTab.setContent(constantGrid);
 
-        Image board = new Image(new FileInputStream("/Users/williampaoli/IdeaProjects/VulcanDashFX/res/img/board.png"));
-        Image robot = new Image(new FileInputStream("/Users/williampaoli/IdeaProjects/VulcanDashFX/res/img/dashboardBot.png"));
+        Image board = new Image(new FileInputStream("res/img/board.png"));
+        Image robot = new Image(new FileInputStream("res/img/dashboardBot.png"));
         ImageView boardView = new ImageView(board);
         ImageView robotView = new ImageView(robot);
 
@@ -313,7 +313,7 @@ public class Main extends Application {
         VBox container = new VBox();
         container.getChildren().add(menuBar);
         container.getChildren().add(splitter);
-        Image appIcon = new Image(new FileInputStream("/Users/williampaoli/IdeaProjects/VulcanDashFX/res/img/vulcanPNG.png"));
+        Image appIcon = new Image(new FileInputStream("res/img/vulcanPNG.png"));
         primaryStage.getIcons().add(appIcon);
         primaryStage.setScene(new Scene(container, 1280, 700));
         primaryStage.show();
